@@ -1,7 +1,7 @@
 {
   "author": "Yuki Akiyama <you2197901 [at] gmail.com>",
   "name": "agent-fsm",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "private": false,
   "dependencies": {
   },
@@ -9,6 +9,7 @@
   "description": "agent fsm",
   "main": "index.js",
   "devDependencies": {
+    "request-promise" : ""
   },
   "scripts": {
     "test": ""

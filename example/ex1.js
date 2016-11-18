@@ -1,17 +1,3 @@
-node-agent-fsm
-==============
-
-install
--------
-
-```
-npm i agent-fsm
-```
-
-example
--------
-
-```
 const rp = require('request-promise');
 const FSM = require('..');
 
@@ -37,6 +23,10 @@ EVENTS[STATE.DOWNLOAD] = FSM.makeEvent({
             ctx.m.update(STATE.RETRY)
         })
     },   
+    task:ctx => {
+    },
+    end:ctx => {
+    }
 });
 EVENTS[STATE.RETRY] = FSM.makeEvent({
     begin : ctx => {
@@ -49,6 +39,7 @@ EVENTS[STATE.FINISH] = FSM.makeEvent({
         console.log(ctx.data)
     }
 })
+
 const main = () => {
     const ctx = {isExit : false}
     ctx.m = FSM.makeStateMachine(ctx, EVENTS);
@@ -60,6 +51,5 @@ const main = () => {
     }
     update();
 }
-main()
-```
 
+main()
