@@ -9,7 +9,8 @@
   "description": "agent fsm",
   "main": "index.js",
   "devDependencies": {
-    "request-promise" : ""
+    "request-promise" : "",
+    "request" : ""
   },
   "scripts": {
     "test": ""
