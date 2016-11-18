@@ -24,6 +24,7 @@ EVENTS[STATE.DOWNLOAD] = FSM.makeEvent({
         })
     },   
     task:ctx => {
+        console.log("process:" + (process.uptime() - ctx.uptime).toFixed(3))
     },
     end:ctx => {
     }
@@ -41,13 +42,13 @@ EVENTS[STATE.FINISH] = FSM.makeEvent({
 })
 
 const main = () => {
-    const ctx = {isExit : false}
+    const ctx = {isExit : false, uptime:process.uptime()}
     ctx.m = FSM.makeStateMachine(ctx, EVENTS);
     ctx.m.update(STATE.DOWNLOAD)
     const update = () => {
         if(ctx.isExit) return
         ctx.m.tick();
-        setImmediate(() => update(), 0)
+        setTimeout(() => update(), 100)
     }
     update();
 }
