@@ -27,17 +27,17 @@ class MyEvent extends Event<Context>{}
 
 class EventInit extends MyEvent{
   begin(ctx:Context){
-    ctx.done = true
+    ctx.done = false
   }
   task(ctx:Context){
     if(ctx.done){
       ctx.fsm().update(STATE.ACTIVE);
+    }else{
+      ctx.done = true
     }
   }
 }
 class EventActive extends MyEvent{
-  begin(ctx:Context){
-  }
   task(ctx:Context){
     ctx.fsm().update(STATE.FINISH);
   }
@@ -48,7 +48,7 @@ class EventFinish extends MyEvent{
   }
 }
 
-const initialize = () => {
+const initializeEvent = () => {
   const events: MyEvent[] = [];
   events[STATE.NONE] = new MyEvent()
   events[STATE.INIT] = new EventInit()
@@ -58,15 +58,22 @@ const initialize = () => {
 }
 
 describe('test', () => {
-  const events = initialize()
   it('test', () => {
+    const events = initializeEvent()
     const ctx = new Context(events)
-    ctx.loop = true
     ctx.fsm().update(STATE.INIT);
     while(ctx.loop === true){
       ctx.fsm().tick()
     }
     assert(ctx.done === true)
     assert(ctx.fsm().get() === STATE.FINISH)
+  })
+  it('error', () =>{
+    try{
+      const ctx = new Context([])
+      assert(false)
+    }catch(e){
+      assert(true)
+    }
   })
 })

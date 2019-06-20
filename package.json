@@ -21,17 +21,14 @@
   "keywords": [
     "fsm"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^9.6.0",
     "@types/mocha": "^5.0.0",
     "typescript": "^3.0.0",
     "istanbul": "^0.4.5",
     "coveralls": "^3.0.0",
-    "mocha": "^5.0.5",
-    "request-promise" : "",
-    "request" : ""
+    "mocha": "^5.0.5"
   },
   "scripts": {
     "prepare": "npm run build",
