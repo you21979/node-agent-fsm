@@ -10,53 +10,58 @@ var STATE = {
     SUSPEND : 3,
 }
 
-var EVENTS = [];
-EVENTS[STATE.NONE] = FSM.dummyEvent;
-EVENTS[STATE.INIT] = FSM.makeEvent({
-    begin:function(ctx){
+class MyEvent extends FSM.Event{}
+class EventInit extends MyEvent{
+    begin(ctx){
         ctx.work[ctx.m.get()] = {done:false};
         setTimeout(function(){ctx.work[ctx.m.get()].done = true}, 1000);
-    },   
-    task:function(ctx){
+    }
+    task(ctx){
         if(ctx.work[ctx.m.get()].done){
             ctx.m.update(STATE.ACTIVE);
         }
-    },
-    end:function(ctx){
+    }
+    end(ctx){
         ctx.work[ctx.m.get()] = null;
         console.log('initialize done')
     }
-});
-EVENTS[STATE.ACTIVE] = FSM.makeEvent({
-    begin:function(ctx){
+}
+class EventActive extends MyEvent{
+    begin(ctx){
         console.log('ACTIVE');
         ctx.work[ctx.m.get()] = {time:process.uptime() + (Math.random() * 10)};
         map.push(ctx);
-    },
-    end:function(ctx){
+    }
+    end(ctx){
         ctx.work[ctx.m.get()] = null;
         map = map.filter(function(v){return v.id !== ctx.id})
-    },
-    task:function(ctx){
+    }
+    task(ctx){
         if(ctx.work[ctx.m.get()].time < process.uptime()){
             ctx.m.update(STATE.SUSPEND);
         }else{
             cmd.push([ctx.id, ctx.action()]);
         }
-    },
-});
-EVENTS[STATE.SUSPEND] = FSM.makeEvent({
-    begin:function(ctx){
+    }
+}
+class EventSuspend extends MyEvent{
+    begin(ctx){
         console.log('SUSPEND');
         setTimeout(function(){ctx.m.update(STATE.ACTIVE)}, 2000);
-    },
-});
+    }
+}
+
+var EVENTS = [];
+EVENTS[STATE.NONE] = new MyEvent();
+EVENTS[STATE.INIT] = new EventInit();
+EVENTS[STATE.ACTIVE] = new EventActive();
+EVENTS[STATE.SUSPEND] = new EventSuspend();
 Object.freeze(EVENTS)
 
 var Agent = function(id){
     this.id = id;
     this.work = {};
-    this.m = FSM.makeStateMachine(this, EVENTS);
+    this.m = new FSM.StateMachine(this, EVENTS);
     this.m.update(STATE.INIT)
 }
 Agent.prototype.heartbeat = function(){
