@@ -1,6 +1,6 @@
 {
   "name": "agent-fsm",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "agent fsm",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
